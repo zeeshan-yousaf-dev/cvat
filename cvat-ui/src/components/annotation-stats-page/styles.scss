@@ -11,6 +11,13 @@
 
 .cvat-annotation-stats-inner {
     @include cvat-management-page-inner;
+
+    // The chart is as tall as the label list; let the card grow with it instead of
+    // squeezing the chart into the viewport, and let the page scroll.
+    @media screen and (min-width: $scroll-breakpoint) {
+        height: auto;
+        padding-bottom: $grid-unit-size * 4;
+    }
 }
 
 .cvat-annotation-stats-inner-wrapper {
