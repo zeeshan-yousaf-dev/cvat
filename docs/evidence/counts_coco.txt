@@ -1,0 +1,82 @@
+images=5000 objects=36781 shapes=41866
+category	objects	shapes
+person	11004	12451
+car	1932	2315
+chair	1791	2141
+book	1161	1184
+bottle	1025	1085
+dining table	697	960
+cup	899	932
+bowl	626	657
+traffic light	637	653
+handbag	540	598
+bench	413	557
+skis	241	522
+boat	430	477
+bird	440	467
+truck	415	465
+motorcycle	371	462
+umbrella	413	449
+cow	380	432
+backpack	371	430
+sheep	361	415
+bicycle	316	412
+wine glass	343	407
+banana	379	398
+potted plant	343	398
+carrot	371	391
+couch	261	378
+knife	326	366
+horse	273	359
+remote	283	353
+surfboard	269	350
+kite	336	340
+donut	338	339
+bus	285	338
+cake	316	329
+suitcase	303	325
+zebra	268	323
+elephant	255	322
+broccoli	316	321
+pizza	285	314
+cell phone	262	296
+orange	287	296
+tennis racket	225	296
+spoon	253	288
+tv	288	288
+vase	277	287
+tie	254	285
+sports ball	263	280
+giraffe	232	271
+clock	267	267
+fork	215	255
+laptop	231	248
+apple	239	243
+sink	225	238
+dog	218	237
+bed	163	227
+train	190	224
+teddy bear	191	219
+skateboard	179	218
+cat	202	211
+toilet	179	196
+baseball bat	146	185
+sandwich	177	180
+oven	143	161
+airplane	143	160
+keyboard	153	158
+baseball glove	148	149
+refrigerator	126	134
+frisbee	115	129
+hot dog	127	128
+mouse	106	108
+fire hydrant	101	103
+snowboard	69	84
+stop sign	75	80
+bear	71	73
+toothbrush	57	68
+parking meter	60	60
+microwave	55	56
+scissors	36	41
+hair drier	11	14
+toaster	9	10
