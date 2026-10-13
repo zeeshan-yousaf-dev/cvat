@@ -23,3 +23,9 @@
     justify-content: space-between;
     margin-bottom: $grid-unit-size * 2;
 }
+
+.cvat-annotation-stats-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}

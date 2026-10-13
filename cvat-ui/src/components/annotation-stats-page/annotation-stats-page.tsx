@@ -7,6 +7,7 @@ import './styles.scss';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
+import Badge from 'antd/lib/badge';
 import Button from 'antd/lib/button';
 import Radio from 'antd/lib/radio';
 import Empty from 'antd/lib/empty';
@@ -21,6 +22,7 @@ import { Bar } from 'react-chartjs-2';
 import { getCore, ServerError } from 'cvat-core-wrapper';
 import GoBackButton from 'components/common/go-back-button';
 import CVATLoadingSpinner from 'components/common/loading-spinner';
+import { LiveStatus, useLiveUpdates } from './use-live-updates';
 
 ChartJS.register(BarElement, CategoryScale, Legend, LinearScale, Tooltip);
 
@@ -42,6 +44,13 @@ const KIND_COLORS: Record<string, string> = {
 };
 
 type ChartMode = 'total' | 'by_type';
+
+const LIVE_BADGES: Record<LiveStatus, { status: 'default' | 'success' | 'warning' | 'error', text: string }> = {
+    connecting: { status: 'default', text: 'Connecting…' },
+    live: { status: 'success', text: 'Live' },
+    reconnecting: { status: 'warning', text: 'Connection lost, reconnecting…' },
+    unavailable: { status: 'error', text: 'Live updates unavailable' },
+};
 
 interface LabelCount {
     id: number;
@@ -135,6 +144,12 @@ function AnnotationStatsPage(): JSX.Element {
         fetchStats();
     }, [fetchStats]);
 
+    const onLiveStats = useCallback((liveStats: TaskAnnotationStats): void => {
+        setStats(liveStats);
+        setError(null);
+    }, []);
+    const liveStatus = useLiveUpdates(`${core.config.backendAPI}/annotation-stats/tasks/${taskId}/ws`, onLiveStats);
+
     let content: JSX.Element | null = null;
     if (fetching) {
         content = <CVATLoadingSpinner />;
@@ -184,7 +199,10 @@ function AnnotationStatsPage(): JSX.Element {
             </Row>
             <Row justify='center' className='cvat-annotation-stats-inner-wrapper'>
                 <Col span={22} xl={18} xxl={14} className='cvat-annotation-stats-inner'>
-                    <Title level={4}>{`Annotations per label — Task #${taskId}`}</Title>
+                    <div className='cvat-annotation-stats-header'>
+                        <Title level={4}>{`Annotations per label — Task #${taskId}`}</Title>
+                        <Badge className='cvat-annotation-stats-live' {...LIVE_BADGES[liveStatus]} />
+                    </div>
                     {content}
                 </Col>
             </Row>
