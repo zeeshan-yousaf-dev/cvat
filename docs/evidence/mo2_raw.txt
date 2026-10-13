@@ -1,0 +1,7 @@
+task 2: 41866 annotations, label 'person', job 10
+run 1: create -> page 814ms (save request 58ms)
+run 2: create -> page 888ms (save request 64ms)
+run 3: create -> page 719ms (save request 63ms)
+run 4: create -> page 140ms (save request 61ms)
+run 5: create -> page 1110ms (save request 64ms)
+MO-2 median = 814ms (spread 140..1110ms over 5 runs)

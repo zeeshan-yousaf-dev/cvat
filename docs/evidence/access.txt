@@ -1,0 +1,8 @@
+== anonymous
+{"detail":"Authentication credentials were not provided."}
+HTTP 401
+== outsider (no access)
+{"detail":"You do not have permission to perform this action."}
+HTTP 403
+== admin (owner)
+HTTP 200

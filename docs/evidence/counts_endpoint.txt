@@ -1,0 +1,81 @@
+task 2 total 41866
+person	12451
+car	2315
+chair	2141
+book	1184
+bottle	1085
+dining table	960
+cup	932
+bowl	657
+traffic light	653
+handbag	598
+bench	557
+skis	522
+boat	477
+bird	467
+truck	465
+motorcycle	462
+umbrella	449
+cow	432
+backpack	430
+sheep	415
+bicycle	412
+wine glass	407
+banana	398
+potted plant	398
+carrot	391
+couch	378
+knife	366
+horse	359
+remote	353
+surfboard	350
+kite	340
+donut	339
+bus	338
+cake	329
+suitcase	325
+zebra	323
+elephant	322
+broccoli	321
+pizza	314
+cell phone	296
+orange	296
+tennis racket	296
+spoon	288
+tv	288
+vase	287
+tie	285
+sports ball	280
+giraffe	271
+clock	267
+fork	255
+laptop	248
+apple	243
+sink	238
+dog	237
+bed	227
+train	224
+teddy bear	219
+skateboard	218
+cat	211
+toilet	196
+baseball bat	185
+sandwich	180
+oven	161
+airplane	160
+keyboard	158
+baseball glove	149
+refrigerator	134
+frisbee	129
+hot dog	128
+mouse	108
+fire hydrant	103
+snowboard	84
+stop sign	80
+bear	73
+toothbrush	68
+parking meter	60
+microwave	56
+scissors	41
+hair drier	14
+toaster	10
