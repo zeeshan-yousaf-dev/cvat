@@ -1,0 +1,6 @@
+no cookie           -> close 4401
+foreign origin      -> close 4403
+missing task 9999   -> close 4404
+snapshot total 41866
+after create: total 41867 person {'mask': 227, 'polygon': 12224, 'rectangle': 1} after 964 ms
+after delete: total 41866 after 1055 ms
