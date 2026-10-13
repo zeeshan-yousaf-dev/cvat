@@ -1,6 +1,12 @@
 """
-Independent count to check the endpoint against: objects per category in the
-COCO annotation file, restricted to the images that were uploaded to the task.
+Independent count to check the endpoint against, read straight from the COCO
+annotation file for the images that were uploaded to the task.
+
+Two numbers per category:
+- objects: COCO annotations;
+- shapes:  rows CVAT creates on "COCO 1.0" import. A non-crowd object whose
+           segmentation has several polygons becomes one polygon shape per part;
+           a crowd (RLE) object becomes one mask.
 
     python3 coco_counts.py annotations/instances_val2017.json --images-dir val2017
 """
@@ -27,12 +33,18 @@ def main():
         images = [image for image in images if image["file_name"] in present]
     image_ids = {image["id"] for image in images}
 
-    counts = Counter(
-        categories[a["category_id"]] for a in coco["annotations"] if a["image_id"] in image_ids
-    )
-    print(f"images={len(image_ids)} total={sum(counts.values())}")
-    for name, count in sorted(counts.items(), key=lambda item: (-item[1], item[0])):
-        print(f"{name}\t{count}")
+    objects, shapes = Counter(), Counter()
+    for a in coco["annotations"]:
+        if a["image_id"] not in image_ids:
+            continue
+        name = categories[a["category_id"]]
+        objects[name] += 1
+        shapes[name] += 1 if a["iscrowd"] else len(a["segmentation"])
+
+    print(f"images={len(image_ids)} objects={sum(objects.values())} shapes={sum(shapes.values())}")
+    print("category\tobjects\tshapes")
+    for name, count in sorted(shapes.items(), key=lambda item: (-item[1], item[0])):
+        print(f"{name}\t{objects[name]}\t{count}")
 
 
 if __name__ == "__main__":
