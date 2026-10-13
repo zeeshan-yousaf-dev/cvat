@@ -1,5 +1,5 @@
 loaded: 41866 annotations | Live
-after create, page shows: 41867 annotations (365 ms, no reload)
+after create, page shows: 41867 annotations (727 ms, no reload)
 server stopped, page shows: Connection lost, reconnecting… | 41867 annotations
 server started, page back to: Live after 24 s
 after delete on the new connection, page shows: 41866 annotations | Live
