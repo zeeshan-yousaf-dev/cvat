@@ -39,3 +39,8 @@ if debug.is_debugging_enabled():
             return await super().handle(*args, **kwargs)
 
     application = DebuggerApp()
+
+# Imported here because it needs the Django apps loaded by get_asgi_application().
+from cvat.apps.test.live import with_annotation_stats_websocket  # noqa: E402
+
+application = with_annotation_stats_websocket(application)
