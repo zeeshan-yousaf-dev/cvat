@@ -8,12 +8,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { Row, Col } from 'antd/lib/grid';
 import Button from 'antd/lib/button';
+import Radio from 'antd/lib/radio';
 import Empty from 'antd/lib/empty';
 import Result from 'antd/lib/result';
 import Title from 'antd/lib/typography/Title';
 import Text from 'antd/lib/typography/Text';
 import {
-    Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip,
+    Chart as ChartJS, BarElement, CategoryScale, Legend, LinearScale, Tooltip, type ChartDataset,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 
@@ -21,16 +22,33 @@ import { getCore, ServerError } from 'cvat-core-wrapper';
 import GoBackButton from 'components/common/go-back-button';
 import CVATLoadingSpinner from 'components/common/loading-spinner';
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
+ChartJS.register(BarElement, CategoryScale, Legend, LinearScale, Tooltip);
 
 const core = getCore();
 const BAR_HEIGHT_PX = 22;
+
+// Fixed colours so a kind keeps its colour whichever kinds a task happens to contain.
+const KIND_COLORS: Record<string, string> = {
+    rectangle: '#1890ff',
+    polygon: '#52c41a',
+    mask: '#fa8c16',
+    polyline: '#13c2c2',
+    points: '#eb2f96',
+    ellipse: '#722ed1',
+    cuboid: '#a0d911',
+    skeleton: '#faad14',
+    track: '#2f54eb',
+    tag: '#8c8c8c',
+};
+
+type ChartMode = 'total' | 'by_type';
 
 interface LabelCount {
     id: number;
     name: string;
     color: string;
     count: number;
+    by_type: Record<string, number>;
 }
 
 interface TaskAnnotationStats {
@@ -49,23 +67,40 @@ function errorMessage(error: unknown): string {
     return error instanceof Error ? error.message : 'Unknown error';
 }
 
-function AnnotationStatsChart({ labels }: { labels: LabelCount[] }): JSX.Element {
+function chartDatasets(labels: LabelCount[], mode: ChartMode): ChartDataset<'bar', number[]>[] {
+    if (mode === 'total') {
+        return [{
+            label: 'Annotations',
+            data: labels.map((label) => label.count),
+            backgroundColor: labels.map((label) => label.color || KIND_COLORS.rectangle),
+        }];
+    }
+
+    const kinds = Array.from(new Set(labels.flatMap((label) => Object.keys(label.by_type)))).sort();
+    return kinds.map((kind) => ({
+        label: kind,
+        data: labels.map((label) => label.by_type[kind] ?? 0),
+        backgroundColor: KIND_COLORS[kind] ?? '#bfbfbf',
+    }));
+}
+
+function AnnotationStatsChart({ labels, mode }: { labels: LabelCount[], mode: ChartMode }): JSX.Element {
     return (
         <div style={{ height: labels.length * BAR_HEIGHT_PX + 60 }}>
             <Bar
                 data={{
                     labels: labels.map((label) => label.name),
-                    datasets: [{
-                        label: 'Annotations',
-                        data: labels.map((label) => label.count),
-                        backgroundColor: labels.map((label) => label.color || '#1890ff'),
-                    }],
+                    datasets: chartDatasets(labels, mode),
                 }}
                 options={{
                     indexAxis: 'y',
                     maintainAspectRatio: false,
                     animation: false,
-                    scales: { x: { beginAtZero: true, ticks: { precision: 0 } } },
+                    plugins: { legend: { display: mode === 'by_type' } },
+                    scales: {
+                        x: { stacked: true, beginAtZero: true, ticks: { precision: 0 } },
+                        y: { stacked: true },
+                    },
                 }}
             />
         </div>
@@ -77,6 +112,7 @@ function AnnotationStatsPage(): JSX.Element {
     const [stats, setStats] = useState<TaskAnnotationStats | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [fetching, setFetching] = useState(true);
+    const [mode, setMode] = useState<ChartMode>('total');
 
     const fetchStats = useCallback(async (): Promise<void> => {
         setFetching(true);
@@ -122,8 +158,19 @@ function AnnotationStatsPage(): JSX.Element {
     } else if (stats) {
         content = (
             <>
-                <Text className='cvat-annotation-stats-total'>{`${stats.total} annotations`}</Text>
-                <AnnotationStatsChart labels={stats.labels} />
+                <div className='cvat-annotation-stats-toolbar'>
+                    <Text>{`${stats.total} annotations`}</Text>
+                    <Radio.Group
+                        value={mode}
+                        optionType='button'
+                        onChange={(event) => setMode(event.target.value)}
+                        options={[
+                            { label: 'Total', value: 'total' },
+                            { label: 'By shape type', value: 'by_type' },
+                        ]}
+                    />
+                </div>
+                <AnnotationStatsChart labels={stats.labels} mode={mode} />
             </>
         );
     }
